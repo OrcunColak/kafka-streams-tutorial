@@ -1,0 +1,4 @@
+mysql -p -u root
+password : 123456
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'debezium'@'%' WITH GRANT OPTION;
+mysql> FLUSH PRIVILEGES;

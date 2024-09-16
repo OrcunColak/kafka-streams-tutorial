@@ -1,0 +1,47 @@
+# https://medium.com/@a.a.halutin/simple-examples-with-confluent-kafka-9b7e58534a88
+version: "3.9"
+services:
+  instance1-zoo1:
+    image: confluentinc/cp-zookeeper:latest
+    hostname: instance1-zoo1
+    container_name: instance1-zoo1
+    ports:
+      - "2181:2181"
+    restart: unless-stopped
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+  instance1-kafka1:
+    image: confluentinc/cp-kafka:latest
+    hostname: instance1-kafka1
+    container_name: instance1-kafka1
+    ports:
+      - "29092:29092"
+    restart: unless-stopped
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'instance1-zoo1:2181'
+      ZOOKEEPER_SASL_ENABLED: 'false'
+      
+      # The names of listeners are arbitrary
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://instance1-kafka1:9093,EXTERNAL://localhost:9092
+      
+      # When configuring Security Protocol Map, each entry is a KEY:VALUE pair.
+      # The KEY must be one of our “names”.
+      # The VALUE must be a recognized security protocol option. Possible options include: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:SASL_PLAINTEXT
+      
+      # Because we have two listeners, one which is intended for use for internal inter-broker communication, and one
+      # which is intended for use for external traffic, we must set the inter.broker.listener.name parameter.
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/configs/kafka_server_jaas.conf"
+    depends_on:
+      - instance1-zoo1
+    volumes:
+      - ./:/etc/kafka/configs
+  
