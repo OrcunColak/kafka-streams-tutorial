@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 @Slf4j
 class Stream {
 
-    private static final String TOPIC_NAME = "demo_topic";
+    private static final String INPUT_TOPIC_NAME = "demo_topic";
 
     public static void main(String[] args) {
         Properties streamsConfig = new Properties();
@@ -30,7 +30,7 @@ class Stream {
         StreamsBuilder builder = new StreamsBuilder();
 
         // Source
-        KStream<String, String> kStream = builder.stream(TOPIC_NAME);
+        KStream<String, String> kStream = builder.stream(INPUT_TOPIC_NAME);
 
         Pattern pattern = Pattern.compile("\\W+", Pattern.UNICODE_CHARACTER_CLASS);
 

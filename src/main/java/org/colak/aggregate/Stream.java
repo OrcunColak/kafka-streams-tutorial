@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 @Slf4j
 class Stream {
 
-    private static final String TOPIC_NAME = "demo_topic";
+    private static final String INPUT_TOPIC_NAME = "demo_topic";
 
     public static void main(String[] args) {
         Properties streamsConfig = new Properties();
@@ -34,7 +34,7 @@ class Stream {
         // Kstream is used on real time event processing and is stateless (can be useful for windowed grouping in a span of time interval).
         // KTable on other hand operates on table of data performing counts, aggregations based on key, making it suitable for batch operations.
         // Source
-        KStream<String, String> kStream = builder.stream(TOPIC_NAME);
+        KStream<String, String> kStream = builder.stream(INPUT_TOPIC_NAME);
 
         Pattern pattern = Pattern.compile("\\W+", Pattern.UNICODE_CHARACTER_CLASS);
 
